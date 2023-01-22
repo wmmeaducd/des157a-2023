@@ -8,12 +8,16 @@ body {
 
 #page {
     background: url(images/papercloseup-small.jpg);
+    box-sizing: border-box;
+    width: 100%;
     position: relative;
     padding: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)  ; 
 }
 
 header {
+    max-width: 1200px;
+    margin: auto;
     padding: 4em 0 2em 0;
     position: relative;
     z-index: 10;
@@ -57,6 +61,8 @@ ul li a:hover {
 }
 
 main {
+    max-width: 1200px;
+    margin: auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -159,4 +165,22 @@ footer {
 @keyframes drip3 {
     from {height: 0;}
     to { height: 305px;}
+}
+
+@media only screen and (min-width: 700px) { 
+    main {display: flex; justify-content: flex-end; min-height: 350px;}
+    main section { flex: 1; }
+    h1 { font-size: 4em; }
+    #splatters {
+        width: 700px;
+        left: 50%;
+        top: -100px;
+        transform: translateX(-50%);
+    }
+}
+
+@media only screen and (min-width: 1000px) { 
+    h1 { font-size: 5em; padding-left: 20%;}
+    main section { flex: none; width: 15%; }
+
 }
