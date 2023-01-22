@@ -1,0 +1,25 @@
+body {
+    font-family: 'Khand', sans-serif;
+    font-weight: 300;
+    color: #333;
+    background: #AB5211;
+}
+
+#page {
+    background: url(images/papercloseup.jpg);
+    position: relative;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)  ; 
+}
+
+h1, h2 {
+    font-family: 'Sedgwick Ave Display', cursive;
+    font-weight: 400;
+    color: #1A4C61;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
