@@ -41,12 +41,19 @@ ul {
 }
 
 ul li {
-    margin-bottom: .5em;
+    height: 1.8em;
+    line-height: 1.8em;
 }
 
-a {
+ul li a {
     text-decoration: none;
     color: #333;
+    transition: font-size 500ms ease, color 500ms ease;
+}
+
+ul li a:hover {
+    font-size: 1.2em;
+    color: #c82430;
 }
 
 main {
@@ -71,9 +78,17 @@ footer {
     width: 100%
 }
 
-#splatters img {
+#splatters > img {
     position: absolute;
 }
+
+#splatters div img {
+    position: absolute;
+    bottom: -10px;
+    transform: translateX(-4px);
+    width: 15px;
+}
+
 
 #splatter1 {
     top:0;
@@ -99,4 +114,49 @@ footer {
     left: 15%;
     width: 60%;
     z-index: 2;
+}
+
+#green-drip {
+    position: absolute;
+    top: 20px;
+    left: 10%;
+    background-color: #c6d7ab;
+    width: 8px;
+    height: 0;
+    animation: drip1 5s ease-out 5s forwards;
+}
+
+#red-drip {
+    position: absolute;
+    top: 20px;
+    left: 40%;
+    background-color: #c82430;
+    width: 8px;
+    height: 0;
+    animation: drip2 10s ease-out 3s forwards;
+}
+
+#blue-drip {
+    position: absolute;
+    top: 20px;
+    right: 30%;
+    background-color: #91cae1;
+    width: 8px;
+    height: 0;
+    animation: drip3 6s ease-out 7s forwards;
+}
+
+@keyframes drip1 {
+    from {height: 0;}
+    to { height: 375px;}
+}
+
+@keyframes drip2 {
+    from {height: 0;}
+    to { height: 500px;}
+}
+
+@keyframes drip3 {
+    from {height: 0;}
+    to { height: 305px;}
 }
