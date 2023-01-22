@@ -3,13 +3,20 @@ body {
     font-weight: 300;
     color: #333;
     background: #AB5211;
+    font-size: 1.2em;
 }
 
 #page {
-    background: url(images/papercloseup.jpg);
+    background: url(images/papercloseup-small.jpg);
     position: relative;
     padding: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5)  ; 
+}
+
+header {
+    padding: 4em 0 2em 0;
+    position: relative;
+    z-index: 10;
 }
 
 h1, h2 {
@@ -18,8 +25,78 @@ h1, h2 {
     color: #1A4C61;
 }
 
+h1 {
+    font-size: 3em;
+    margin: 0;
+}
+
+h2 {
+    margin: 0 0 0.5em 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+ul li {
+    margin-bottom: .5em;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
 main {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+footer {
+    text-align: center;
+    color: #fff;
+    font-weight: 500;
+    padding: 50px;
+}
+/* Splatter Rules */
+#splatters {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%
+}
+
+#splatters img {
+    position: absolute;
+}
+
+#splatter1 {
+    top:0;
+    right:0;
+    width: 30%;
+    z-index: 1;
+}
+
+#splatter4 {
+    top:-3em;
+    left:-3em;
+    width: 70%;
+}
+
+#splatter3 {
+    top:-3em;
+    left:50%;
+    width: 60%;
+}
+
+#splatter2 {
+    top: -5em;
+    left: 15%;
+    width: 60%;
+    z-index: 2;
 }
