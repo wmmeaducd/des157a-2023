@@ -1,0 +1,1 @@
+var elements = ["<body>", "<head>", "<header>", "<footer>", "<p>", "<h1>", "<h2>", "<h3>", "<img>", "<input>", "<br>", "<select>", "<ul>", "<ol>", "<li>", "<a>", "<textarea>", "<button>", "<label>", "<main>", "<div>", "<span>", "<form>", "<section>", "<article>", "<aside>", "<html>", "<meta>", "<video>", "<em>", "<strong>", "<fieldset>"];

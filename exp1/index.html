@@ -1,0 +1,557 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Recursive Experimentation</title>
+	<script src="workwords.js"></script>
+	<script src="icons.js"></script>
+	<script src="elements.js"></script>
+	
+	<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:700" rel="stylesheet">
+	
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	
+	<style>
+
+	* {
+		box-sizing:border-box;
+	}
+
+	#page {
+		width:100%;
+		overflow:hidden;
+		font-family: 'Source Sans Pro', sans-serif;
+		font-weight: 700;
+		/*text-transform: uppercase;*/
+	}
+
+	div { position:absolute; opacity:0; }
+
+	</style>
+
+</head>
+
+<body id="page">
+</body>
+
+<script>
+
+/************
+
+For Art Pieces at Axis
+
+On this one, there is a 1 in 5 chance that the icon will be a different color and a different size, in the string of icons being produced.
+
+*************/
+
+var windowWidth = window.innerWidth;
+var windowHeight = window.innerHeight;
+var container = document.getElementById('page');
+//var letters = genCharArray('a', 'z');
+//var letterCount = letters.length-1;
+var numOfBreaks = 3;
+
+var chanceArray = chanceBreakdown(numOfBreaks);
+var boxChance = chanceBreakdown(1);
+var circleChance = chanceBreakdown(2);
+var rotation = getRandomInt(0, 360);
+
+console.log(chanceArray + " Box, Circle, Icon, Word, Code");
+
+// An array of color schemes...
+var colorScheme = new Array();
+
+/****** Old Color Schemes ************************************************************
+colorScheme[0] = new Array ("#D8C358", "#6D0839", "#D0E799", "#25271E", "#FBEFF4" );
+colorScheme[1] = new Array ("#000000", "#ad0202", "#c2ad6c" );
+colorScheme[2] = new Array ("#3c7c59", "#a4e1f1", "#220845", "#b79829", "#472e00" );
+colorScheme[3] = new Array ("#000000", "#a4e1f1", "#b79829" );
+colorScheme[4] = new Array ("#c6c655", "#487d29", "#151814", "#dbd1eb", "#37297d" );
+colorScheme[5] = new Array ("#000000", "#c6c655", "#37297d" );
+colorScheme[6] = new Array ("#330d54", "#9bb6c5", "#d3e2cc", "#6e0f06", "#f1e5d5" );
+colorScheme[7] = new Array ("#000000", "#d3e2cc", "#6e0f06" );
+colorScheme[8] = new Array ("#f79ae6", "#800311", "#f9384d", "#c9b19a", "#ab6726" );
+colorScheme[9] = new Array ("#f70620", "#ddd600", "#1b2c49" );
+colorScheme[10] = new Array ("#ddd600", "#263b5f", "#ebaab1", "#5584d7", "#75000d" );
+colorScheme[11] = new Array ("#1b2c49", "#e4e2ac", "#fb001c" );
+colorScheme[12] = new Array ("#e24d1a", "#cddeff", "#01153c", "#a74c2c", "#331d15" );
+colorScheme[13] = new Array ("#331d15", "#ddd3d4", "#455780" );
+colorScheme[14] = new Array ("#cddeff", "#1c325c", "#bbb97e", "#f6f5ba", "#e24d1a" );
+colorScheme[15] = new Array ("#bbb97e", "#01153c", "#a74c2c" );
+
+**************************************************************************************/
+
+colorScheme[0] = new Array ("#eeefe6", "#0a0908", "#faa916", "#929982", "#0c1713" );
+colorScheme[1] = new Array ("#313715", "#d16014", "#272435", "#f0eff4", "#e8eddf" );
+colorScheme[2] = new Array ("#0a0908", "#fff8f0", "#ffffff", "#2d2d2a", "#271033" );
+colorScheme[3] = new Array ("#393d3f", "#d5dce2", "#ffc857", "#ede6e3", "#000000" );
+colorScheme[4] = new Array ("#6d0900", "#0b0a11", "#dbdee0", "#f7faff", "#dc493a" );
+colorScheme[5] = new Array ("#1d231e", "#140008", "#f2eee8", "#d6d9ce", "#68893f" );
+colorScheme[6] = new Array ("#8B1E3F", "#3C153B", "#11151C", "#6B717E", "#FFFEF4" );
+colorScheme[7] = new Array ("#22223B", "#E8E8E8", "#FFFBF9", "#6B717E", "#BFBFBF" );
+colorScheme[8] = new Array ("#50514F", "#F5F9E9", "#FFFCFF", "#247BA0", "#040403" );
+	
+// pull one color scheme...
+var colors = colorScheme[getRandomInt(0, 8)];
+	
+	
+function hexToR(h) {return parseInt((cutHex(h)).substring(0,2),16)}
+function hexToG(h) {return parseInt((cutHex(h)).substring(2,4),16)}
+function hexToB(h) {return parseInt((cutHex(h)).substring(4,6),16)}
+function cutHex(h) {return (h.charAt(0)=="#") ? h.substring(1,7):h}
+
+function convertRGBA(hex){
+	var chance = getRandomInt(0, 2);
+	if(chance == 2){
+		//console.log("solid gradient");
+		return "rgba(" + hexToR(hex) + ", " + hexToG(hex) + ", " + hexToB(hex) + ", " + ", 1 )";
+	}
+	else{
+		//console.log("transparent gradient");
+		return "rgba(" + hexToR(hex) + ", " + hexToG(hex) + ", " + hexToB(hex) + ", " + Math.random() + ")";
+	}	
+}
+
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function createBackground(){
+	
+	document.getElementsByTagName('body')[0].style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+	
+	var numOfBoxes = getRandomInt(3, 20);
+	for(var i=0; i<numOfBoxes; i++){
+		var box = document.createElement("div");
+		var boxWidth = getRandomInt(10, windowWidth);
+		var boxHeight = getRandomInt(10, windowHeight);
+		
+		//Three variables below for opacity...
+		var randomOpacity = getRandomInt(50, 100)/100;
+		var opacitySettings = new Array (randomOpacity, 1, 1);
+		var targetOpacity = opacitySettings[Math.floor(Math.random()*opacitySettings.length)];
+		
+		addGradientBox( box, boxWidth, boxHeight );
+		box.style.webkitTransform = 'rotate('+rotation+'deg)'; 
+		box.style.mozTransform = 'rotate('+rotation+'deg)';
+		box.style.transform = 'rotate('+rotation+'deg)';
+		
+		box.style.top = getRandomInt(-boxHeight, windowHeight) + "px";
+		box.style.left = getRandomInt(-boxWidth, windowWidth) + "px";
+		
+		unfadeto(box, targetOpacity);
+		document.getElementById("page").appendChild(box);
+	}
+	createBox();
+}
+
+function createBox()
+{	
+	setTimeout( function(){
+		var box = document.createElement("div");
+		var boxWidth = getRandomInt(10, windowWidth);
+		var boxHeight = getRandomInt(10, windowHeight);
+		
+		//Three variables below for opacity...
+		var randomOpacity = getRandomInt(50, 100)/100;
+		var opacitySettings = new Array (randomOpacity, 1, 1);
+		var targetOpacity = opacitySettings[Math.floor(Math.random()*opacitySettings.length)];
+		//var counter = 1;
+		
+		//Box or circle section...
+		var element = getRandomInt(1, 100);
+		
+		switch( true ) {
+			
+			case element > chanceArray[0]: addBox( box, boxWidth, boxHeight ); break;
+			case element > chanceArray[1]: addWordString( box ); break;
+			case element > chanceArray[2]: addIconStringMod( box ); break;
+			default: addIcon( box );
+			
+		}
+		
+		box.style.webkitTransform = 'rotate('+rotation+'deg)'; 
+		box.style.mozTransform = 'rotate('+rotation+'deg)';
+		box.style.transform = 'rotate('+rotation+'deg)';
+		
+		box.style.top = getRandomInt(-boxHeight, windowHeight) + "px";
+		box.style.left = getRandomInt(-boxWidth, windowWidth) + "px";
+		
+		
+		// fade elements to a random opacity...
+		unfadeto(box, targetOpacity);
+		document.getElementById("page").appendChild(box);
+		
+		var boxMax = getRandomInt(10, 500);
+		
+		if( container.children.length > boxMax )
+		{
+			var counter = (container.children.length - boxMax)-1;
+			console.log('enter fade out mode... removing ' + counter + ' elements');
+			fade(container.children[(counter)], counter);
+		}
+		else
+		{
+			createBox();	
+		}
+	}, 1000 );
+}
+
+function addBox( box, width, height ){
+	var whichBox = getRandomInt(1, 100);
+	switch( true ) {	
+		//case whichBox > chanceArray[0]: addSimpleBox( box, width, height ); break;
+		case whichBox > chanceArray[0]: addGradientBox( box, width, height ); break;
+		default: addBorderBox( box, width, height );
+	}
+}
+
+/*function addCircle( element, width ){
+	var whichCircle = getRandomInt(1, 100);
+	switch( true ) {	
+		case whichCircle > chanceArray[0]: addGradientCircle( element, width ); break;
+		case whichCircle > chanceArray[1]: addSplitCircle( element, width ); break;
+		default: addBorderCircle( element, width );
+	}
+}*/
+
+/*function addSimpleBox( element, width, height ) {
+	element.style.width = width + "px";
+	element.style.height = height + "px";
+	element.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+}*/
+	
+function addGradientBox( element, width, height ) {
+	element.style.width = width + "px";
+	element.style.height = height + "px";
+	
+	var currentColorScheme = colors.slice(0);
+	var color1Pos = getRandomInt(0, (currentColorScheme.length - 1));
+	var color1 = currentColorScheme[color1Pos];
+	
+	currentColorScheme.splice(color1Pos, 1);
+	var color2 = currentColorScheme[Math.floor(Math.random()*currentColorScheme.length)];
+	element.style.background = "linear-gradient(180deg, " + convertRGBA(color1) + " 0%, " + convertRGBA(color2) + " 100%)";
+}
+
+function addBorderBox( element, width, height ) {
+	
+	var numOfBorders = new Array("allsides", "twosides", "oneside");
+	var borderType = new Array( "solid", "dashed", "dotted");
+	var borderSelect = numOfBorders[Math.floor(Math.random()*numOfBorders.length)];
+	var borderTypeSelect = borderType[Math.floor(Math.random()*borderType.length)];
+	
+	var elementColors = getTwoColors();
+	
+	/*
+		This next section sets the border size. It takes the 
+		short side of the rectangle, and makes sure that the border is no
+		more than 45% the width of that side. For very skinny rectangles, it
+		sets the border to 2 px wide.
+	*/
+	var borderSize = 0;
+	if( width > height ) {
+		var maxBorder = Math.floor(height * .45);
+		if( maxBorder > 4 ){
+			borderSize = getRandomInt(4, maxBorder);
+		}
+		else { borderSize = 2; }
+	}
+	else {
+		var maxBorder = Math.floor(width * .45);
+		if( maxBorder > 4 ){
+			borderSize = getRandomInt(4, maxBorder);
+		}
+		else { borderSize = 2; }
+	}
+	//console.log(borderSize + "px");
+	
+	element.style.width = width + "px";
+	element.style.height = height + "px";
+	element.style.backgroundColor = elementColors[0];
+	
+	if( borderSelect == "allsides" ) {
+		element.style.borderWidth = borderSize + "px";
+		element.style.borderColor = elementColors[1];
+		element.style.borderStyle = "solid";
+	}
+	
+	else if ( borderSelect == "twosides" ) {
+		element.style.borderTopWidth = borderSize + "px";
+		element.style.borderTopColor = elementColors[1];
+		element.style.borderTopStyle = "solid";
+		element.style.borderBottomWidth = borderSize + "px";
+		element.style.borderBottomColor = elementColors[1];
+		element.style.borderBottomStyle = "solid";
+	}
+	else {
+		element.style.borderLeftWidth = borderSize + "px";
+		element.style.borderLeftColor = elementColors[1];
+		// Elements with only one border could end up with solid, dashed or dotted border...
+		element.style.borderLeftStyle = borderTypeSelect;
+	}
+}
+
+/*function addSimpleCircle( element, width ) {
+	element.style.width = width + "px";
+	element.style.height = width + "px";
+	element.style.borderRadius = "50%";
+	element.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+}*/
+	
+/*function addGradientCircle( element, width ) {
+	element.style.width = width + "px";
+	element.style.height = width + "px";
+	element.style.borderRadius = "50%";
+	var currentColorScheme = colors.slice(0);
+	var color1Pos = getRandomInt(0, (currentColorScheme.length - 1));
+	var color1 = currentColorScheme[color1Pos];
+	
+	currentColorScheme.splice(color1Pos, 1);
+	var color2 = currentColorScheme[Math.floor(Math.random()*currentColorScheme.length)];
+	element.style.background = "linear-gradient(180deg, " + convertRGBA(color1) + " 0%, " + convertRGBA(color2) + " 100%)";
+}*/
+
+/*function addSplitCircle( element, width ) {
+	var bdrWidth = width/2;
+	var elementColors = getTwoColors();
+	element.style.width = width + "px";
+	element.style.height = width + "px";
+	element.style.borderRadius = "50%";
+	element.style.borderTopWidth = bdrWidth + "px";
+	element.style.borderTopColor = elementColors[1];
+	element.style.borderTopStyle = "solid";
+	element.style.backgroundColor = elementColors[0];
+}*/
+
+/*function addBorderCircle( element, width ) {
+	var borderSize = 0;
+	var maxBorder = Math.floor(width * .33);
+	if( maxBorder > 4 ){
+		borderSize = getRandomInt(4, maxBorder);
+	}
+	else { borderSize = 2; }
+
+	var elementColors = getTwoColors();
+	element.style.width = width + "px";
+	element.style.height = width + "px";
+	element.style.borderRadius = "50%";
+	element.style.borderWidth = borderSize + "px";
+	element.style.borderColor = elementColors[1];
+	element.style.borderStyle = "solid";
+	element.style.backgroundColor = elementColors[0];
+}*/
+
+/*function addLetter( element ) {
+	var getLetter = getRandomInt(0, letterCount);
+	var content = document.createTextNode(letters[getLetter]);
+	var myFontSize = getRandomInt(50, windowWidth);
+	element.style.color = colors[Math.floor(Math.random()*colors.length)];
+	element.style.fontSize = myFontSize + "px";
+	element.appendChild(content);
+}*/
+
+function addWord( element ) {
+	var wordArraySize = workWords.length;
+	var getWord = workWords[ getRandomInt(0, (wordArraySize-1)) ];
+	var content = document.createTextNode(getWord);
+	var myFontSize = getRandomInt(50, windowWidth);
+	element.style.color = colors[Math.floor(Math.random()*colors.length)];
+	element.style.fontSize = myFontSize + "px";
+	element.appendChild(content);			
+}
+	
+function addIcon( element ) {
+	var iconArraySize = icons.length;
+	var getIcon = icons[ getRandomInt(0, (iconArraySize-1)) ];
+	//var content = element.innerHTML=getIcon;
+	var myFontSize = getRandomInt(50, windowWidth);
+	element.style.color = colors[Math.floor(Math.random()*colors.length)];
+	element.style.fontSize = myFontSize + "px";
+	element.style.fontWeight ="normal";
+	element.innerHTML=getIcon;			
+}
+	
+function addIconString( element ){
+	var iconArraySize = icons.length;
+	var iconString = "";
+	var iconStringLength = getRandomInt(3, 100);
+	var myFontSize = getRandomInt(10, 200);
+	for(var i=0; i<iconStringLength; i++){
+		iconString += icons[ getRandomInt(0, (iconArraySize-1)) ] + " ";
+	}
+	element.style.color = colors[Math.floor(Math.random()*colors.length)];
+	element.style.fontSize = myFontSize + "px";
+	element.style.fontWeight ="normal";
+	element.innerHTML=iconString;
+}
+	
+function addIconStringMod( element ){
+	var iconArraySize = icons.length;
+	var iconString = "";
+	var iconStringLength = getRandomInt(3, 100);
+	var myFontSize = getRandomInt(10, 200);
+	
+	for(var i=0; i<iconStringLength; i++){
+		var thisIcon = icons[ getRandomInt(0, (iconArraySize-1)) ];
+		var randomChance = getRandomInt(1, 5);
+		if(randomChance == 5){
+			iconString += addStyling(thisIcon, myFontSize) + " ";
+		}
+		else {
+			iconString += icons[ getRandomInt(0, (iconArraySize-1)) ] + " ";
+		}
+	}
+	element.style.color = colors[Math.floor(Math.random()*colors.length)];
+	element.style.fontSize = myFontSize + "px";
+	element.style.fontWeight ="normal";
+	element.innerHTML=iconString;
+}
+	
+function addStyling(thisIcon, size){
+	var randomNum = (Math.round(Math.random() * 100)/100)+1;
+	randomNum = randomNum.toFixed(2);
+	var newFontSize = size*randomNum;
+	var thisIconSlice = thisIcon.slice(0, (thisIcon.length-5) );
+	var thisIconColor = colors[Math.floor(Math.random()*colors.length)];
+	var addedStyling = ' style="color: '+thisIconColor+'; font-size: '+newFontSize+'px;"></i>';
+	var finalIcon = thisIconSlice + addedStyling;
+	return finalIcon;
+}
+	
+function addWordString(element) {
+	var wordArraySize = workWords.length;
+	var wordString = "";
+	var wordStringLength = getRandomInt(3, 25);
+	var myFontSize = getRandomInt(10, 200);
+	var myFontSize = getRandomInt(10, 200);
+	
+	for(var i=0; i<wordStringLength; i++){
+		var thisWord = workWords[ getRandomInt(0, (wordArraySize-1)) ];
+		var randomChance = getRandomInt(1, 5);
+		if(randomChance == 5){
+			wordString += addWordStyling(thisWord, myFontSize) + " ";
+		}
+		else {
+			wordString += workWords[ getRandomInt(0, (wordArraySize-1)) ] + " ";
+		}
+	}
+	element.style.color = colors[Math.floor(Math.random()*colors.length)];
+	element.style.fontSize = myFontSize + "px";
+	element.innerHTML=wordString;
+}
+	
+function addWordStyling(thisWord, size){
+	var randomNum = (Math.round(Math.random() * 100)/100)+1;
+	randomNum = randomNum.toFixed(2);
+	var newFontSize = size*randomNum;
+	var thisWordColor = colors[Math.floor(Math.random()*colors.length)];
+	var openSpan = '<span style="color: '+thisWordColor+'; font-size: '+newFontSize+'px;">';
+	var finalWord = openSpan + thisWord + '</span>';
+	return finalWord;
+}
+
+function unfadeto(element, targetOpacity) {
+    var op = 0.05;
+    var timer = setInterval(function () {
+        if (op >= targetOpacity){
+            clearInterval(timer);
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += op * 0.05;
+    }, 50);
+}
+
+function fade(element, counter) {
+	//console.log("entering fadeout mode");
+    var op = 1;  // initial opacity
+	var countDown = counter;
+    var timer = setInterval(function () {
+        if (op <= 0.05){
+            clearInterval(timer);
+			container.removeChild(container.children[countDown]);
+            countDown--;
+			if( countDown > 0 )
+			{
+				fade(container.children[countDown], countDown);
+			}
+			else
+			{
+				// when it is done fading out, there is a chance of picking a differnt color scheme
+				// for the next build up...
+				colors = colorScheme[getRandomInt(0, 8)];
+				// And add a new set of breakpoints for probabilities...
+				chanceArray = chanceBreakdown(numOfBreaks);
+				
+				rotation = getRandomInt(0, 360);
+				
+				
+				console.log(chanceArray + " Box, Circle, Letter, Word");
+				
+				boxChance = chanceBreakdown(1);
+				circleChance = chanceBreakdown(2);
+				//createBox();
+				createBackground();			}
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op -= op * 0.05;
+    }, 30);
+}
+
+function genCharArray(charA, charZ) {
+    var a = [], i = charA.charCodeAt(0), j = charZ.charCodeAt(0);
+    for (; i <= j; ++i) {
+        a.push(String.fromCharCode(i));
+    }
+    return a;
+}
+
+function chanceBreakdown(breaks)
+{
+	var wholeNum = 100;
+	var breakDown = [];
+	var thisNum = "";
+	var maxNum = ""
+	// This helps randomize how close to 100 and to 1 you are likely to get for the first and last number in the array.
+	var multiplier = getRandomInt( 1, 3 );
+	
+	for( var i = 0; i < breaks; i++ )
+	{
+		maxNum = wholeNum - ((breaks * multiplier) - i);
+		thisNum = getRandomInt( 1, maxNum );
+		thisNum = wholeNum - thisNum;
+		wholeNum = thisNum;
+		breakDown.push(thisNum);
+	}
+	return breakDown;
+}
+
+function getTwoColors() {
+	// Make a copy of the current color scheme array... (you have to use slice to make a copy of the array)
+	var currentColorScheme = colors.slice(0);
+	
+	// Get a random color position
+	var color1Pos = getRandomInt(0, (currentColorScheme.length - 1));
+	
+	// Set the bg color
+	var color1 = currentColorScheme[color1Pos];
+	
+	// Remove that color from the temporary array
+	currentColorScheme.splice(color1Pos, 1);
+	
+	// Set the border color to one of the remaining colors
+	var color2 = currentColorScheme[Math.floor(Math.random()*currentColorScheme.length)];
+	
+	var twoColors = new Array(color1, color2);
+	
+	return twoColors;
+}
+
+createBackground();
+
+</script>
+
+</html>
